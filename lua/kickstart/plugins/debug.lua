@@ -14,6 +14,8 @@ return {
     -- Creates a beautiful debugger UI
     'rcarriga/nvim-dap-ui',
 
+    --virtual text
+    'theHamsta/nvim-dap-virtual-text',
     -- Installs the debug adapters for you
     'williamboman/mason.nvim',
     'jay-babu/mason-nvim-dap.nvim',
@@ -25,6 +27,7 @@ return {
     local dap = require 'dap'
     local dapui = require 'dapui'
 
+    require('nvim-dap-virtual-text').setup()
     require('mason-nvim-dap').setup {
       -- Makes a best effort to setup the various debuggers with
       -- reasonable debug configurations
