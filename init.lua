@@ -1,5 +1,7 @@
 --[[
 
+TODO: Need to check out format_on_save 
+
 =====================================================================
 ==================== READ THIS BEFORE CONTINUING ====================
 =====================================================================
@@ -144,6 +146,9 @@ vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
+
+-- smart indent
+vim.opt.smartindent = true
 
 -- Show which line your cursor is on
 vim.opt.cursorline = true
