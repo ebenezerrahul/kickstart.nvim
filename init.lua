@@ -167,7 +167,7 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+-- vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -437,7 +437,7 @@ require('lazy').setup({
 
       -- vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       -- Slightly advanced example of overriding default behavior and theme
-      vim.keymap.set('n', '<leader>s/', function()
+      vim.keymap.set('n', '<leader>sb', function()
         -- You can pass additional configuration to telescope to change theme, layout, etc.
         builtin.current_buffer_fuzzy_find(require('telescope.themes').get_ivy {
           winblend = 0,
@@ -458,6 +458,22 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sn', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
       end, { desc = '[S]earch [N]eovim files' })
+
+      vim.keymap.set('n', '<leader>sm', function()
+        builtin.marks(require('telescope.themes').get_dropdown {
+          prompt_title = 'marks',
+          previewer = false,
+        })
+      end, { desc = '[S]earch [M]arks' })
+
+      vim.keymap.set('n', '<leader>pr', function()
+        builtin.registers(require('telescope.themes').get_dropdown {
+          prompt_title = 'registers',
+          previewer = false,
+        })
+      end, { desc = '[P]aste [R]egisters' })
+
+      vim.keymap.set('n', '<leader>q', ':Telescope diagnostics<CR>', { desc = 'search diagnostic' })
     end,
   },
 
