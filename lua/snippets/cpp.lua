@@ -47,4 +47,14 @@ ls.add_snippets(language, {
     )
   ),
   s('hello', fmt([[std::cout << 'Hello' << endl;]], {})),
+  s(
+    'leet',
+    fmt(
+      [[
+  #include <bits/stdc++.h>
+  using namespace std;
+  ]],
+      {}
+    )
+  ),
 })

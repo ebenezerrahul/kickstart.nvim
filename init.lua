@@ -251,15 +251,54 @@ require('lazy').setup({
     'lewis6991/gitsigns.nvim',
     config = function()
       require('gitsigns').setup {
+        -- signs = {
+        --   add = { text = '+' },
+        --   change = { text = '~' },
+        --   delete = { text = '_' },
+        --   topdelete = { text = '‾' },
+        --   changedelete = { text = '~' },
+        -- },
         signs = {
-          add = { text = '+' },
-          change = { text = '~' },
+          add = { text = '┃' },
+          change = { text = '┃' },
           delete = { text = '_' },
           topdelete = { text = '‾' },
           changedelete = { text = '~' },
+          untracked = { text = '┆' },
+        },
+        signcolumn = true,
+        watch_gitdir = {
+          follow_files = true,
+        },
+        sign_priority = 6,
+        current_line_blame = false, -- Toggle with `:Gitsigns toggle_current_line_blame`
+        current_line_blame_opts = {
+          virt_text = true,
+          virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
+          delay = 1000,
+          ignore_whitespace = false,
+          virt_text_priority = 100,
+        },
+        current_line_blame_formatter = '<author>, <author_time:%Y-%m-%d> - <summary>',
+        current_line_blame_formatter_opts = {
+          relative_time = false,
+        },
+        update_debounce = 100,
+        status_formatter = nil,
+        preview_config = {
+          -- Options passed to nvim_open_win
+          border = 'single',
+          style = 'minimal',
+          relative = 'cursor',
+          row = 0,
+          col = 1,
         },
         on_attach = function(bufnr)
           vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>hs', '<cmd>lua require"gitsigns".stage_hunk()<CR>', {})
+          -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>hr', '<cmd>lua require"gitsigns".reset_hunk()', { desc = 'git [r]eset hunk' })
+          vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>hu', '<cmd>lua require"gitsigns".undo_stage_hunk()<CR>', {})
+          vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>hd', '<cmd>lua require"gitsigns".diff_this()<CR>', {})
+          vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>hb', '<cmd>lua require"gitsigns".blame_line()<CR>', {})
           vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>hp', '<cmd>lua require"gitsigns".preview_hunk_inline()<CR>', {})
           vim.api.nvim_buf_set_keymap(bufnr, 'n', ']h', '<cmd>lua require"gitsigns".next_hunk()<CR>', {})
           vim.api.nvim_buf_set_keymap(bufnr, 'n', '[h', '<cmd>lua require"gitsigns".prev_hunk()<CR>', {})
@@ -481,7 +520,7 @@ require('lazy').setup({
     'neovim/nvim-lspconfig',
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for neovim
-      'williamboman/mason.nvim',
+      { 'williamboman/mason.nvim', config = true },
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
@@ -631,7 +670,33 @@ require('lazy').setup({
         clangd = {},
         -- gopls = {},
         pyright = {},
-        -- rust_analyzer = {},
+        rust_analyzer = {
+
+          settings = {
+            ['rust-analyzer'] = {
+              checkOnSave = {
+                command = 'clippy',
+              },
+              imports = {
+                granularity = {
+                  group = 'module',
+                },
+                prefix = 'self',
+              },
+              cargo = {
+                buildScripts = {
+                  enable = true,
+                },
+              },
+              procMacro = {
+                enable = true,
+              },
+              diagnostics = {
+                enable = true,
+              },
+            },
+          },
+        },
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -669,6 +734,15 @@ require('lazy').setup({
         },
       }
 
+      -- require'lspconfig'.rust_analyzer.setup{
+      --   settings = {
+      --     ['rust-analyzer'] = {
+      --       diagnostics = {
+      --         enable = false;
+      --       }
+      --     }
+      --   }
+      -- }
       -- Ensure the servers and tools above are installed
       --  To check the current status of installed tools and/or manually install
       --  other tools, you can run
@@ -727,6 +801,7 @@ require('lazy').setup({
       -- Snippet Engine & its associated nvim-cmp source
       {
         'L3MON4D3/LuaSnip',
+        'onsails/lspkind.nvim',
         build = (function()
           -- Build Step is needed for regex support in snippets
           -- This step is not supported in many windows environments
@@ -744,6 +819,7 @@ require('lazy').setup({
       --  into multiple repos for maintenance purposes.
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
+      'hrsh7th/cmp-buffer',
 
       -- If you want to add a bunch of pre-configured snippets,
       --    you can use this plugin to help you. It even has snippets
@@ -775,6 +851,9 @@ require('lazy').setup({
           -- Select the [p]revious item
           ['<C-p>'] = cmp.mapping.select_prev_item(),
 
+          -- Scroll the documentation window [b]ack / [f]orward
+          -- ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+          -- ['<C-f>'] = cmp.mapping.scroll_docs(4),
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
@@ -950,5 +1029,12 @@ require('lazy').setup({
 })
 
 require 'snippets.cpp'
+
+require('cmp').setup.filetype({ 'sql' }, {
+  sources = {
+    { name = 'vim-dadbod-completion' },
+    { name = 'buffer' },
+  },
+})
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

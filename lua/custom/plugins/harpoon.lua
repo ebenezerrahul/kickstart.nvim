@@ -8,7 +8,7 @@ return {
     vim.keymap.set('n', '<C-j>', function()
       require('harpoon.ui').nav_next()
     end)
-    vim.keymap.set('n', '<C-k>', function()
+    vim.keymap.set('n', '<C-b>', function()
       require('harpoon.ui').nav_prev()
     end)
     vim.keymap.set('n', '<C-f>', function()
