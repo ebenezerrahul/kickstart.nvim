@@ -47,8 +47,7 @@ Kickstart Guide:
 
   TODO: The very first thing you should do is to run the command `:Tutor` in Neovim.
 
-    If you don't know what this means, type the following:
-      - <escape key>
+    If you don't know what this means, type the following: - <escape key>
       - :
       - Tutor
       - <enter key>
@@ -294,14 +293,14 @@ require('lazy').setup({
           col = 1,
         },
         on_attach = function(bufnr)
-          vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>hs', '<cmd>lua require"gitsigns".stage_hunk()<CR>', {})
           -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>hr', '<cmd>lua require"gitsigns".reset_hunk()', { desc = 'git [r]eset hunk' })
+          vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>hs', '<cmd>lua require"gitsigns".stage_hunk()<CR>', {})
           vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>hu', '<cmd>lua require"gitsigns".undo_stage_hunk()<CR>', {})
           vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>hd', '<cmd>lua require"gitsigns".diff_this()<CR>', {})
           vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>hb', '<cmd>lua require"gitsigns".blame_line()<CR>', {})
           vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>hp', '<cmd>lua require"gitsigns".preview_hunk_inline()<CR>', {})
-          vim.api.nvim_buf_set_keymap(bufnr, 'n', ']h', '<cmd>lua require"gitsigns".next_hunk()<CR>', {})
-          vim.api.nvim_buf_set_keymap(bufnr, 'n', '[h', '<cmd>lua require"gitsigns".prev_hunk()<CR>', {})
+          -- vim.api.nvim_buf_set_keymap(bufnr, 'n', ']h', '<cmd>lua require"gitsigns".next_hunk()<CR>', {})
+          -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '[h', '<cmd>lua require"gitsigns".prev_hunk()<CR>', {})
           vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>hr', '<cmd>lua require"gitsigns".reset_hunk()<CR>', {})
         end,
       }
@@ -670,6 +669,7 @@ require('lazy').setup({
         clangd = {},
         -- gopls = {},
         pyright = {},
+        emmet_ls = {},
         rust_analyzer = {
 
           settings = {
@@ -691,6 +691,41 @@ require('lazy').setup({
               procMacro = {
                 enable = true,
               },
+              inlay_hints = {
+                -- automatically set inlay hints (type hints)
+                -- default: true
+                auto = false,
+
+                -- Only show inlay hints for the current line
+                only_current_line = false,
+
+                -- whether to show parameter hints with the inlay hints or not
+                -- default: true
+                show_parameter_hints = true,
+
+                -- prefix for parameter hints
+                -- default: "<-"
+                parameter_hints_prefix = '<- ',
+
+                -- prefix for all the other hints (type, chaining)
+                -- default: "=>"
+                other_hints_prefix = '=> ',
+
+                -- whether to align to the length of the longest line in the file
+                max_len_align = false,
+
+                -- padding from the left if max_len_align is true
+                max_len_align_padding = 1,
+
+                -- whether to align to the extreme right or not
+                right_align = false,
+
+                -- padding from the right if right_align is true
+                right_align_padding = 7,
+
+                -- The color of the hints
+                highlight = 'Comment',
+              },
               diagnostics = {
                 enable = true,
               },
@@ -704,6 +739,15 @@ require('lazy').setup({
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
         tsserver = {},
+
+        ltex = {
+          filetypes = { 'text', 'markdown', 'md', 'norg' },
+          settings = {
+            ltex = {
+              completionEnabled = true,
+            },
+          },
+        },
         --
 
         lua_ls = {
@@ -786,6 +830,7 @@ require('lazy').setup({
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
         python = { 'isort', 'black' },
+        rust = { 'rustfmt' },
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
@@ -889,6 +934,23 @@ require('lazy').setup({
           { name = 'luasnip' },
           { name = 'path' },
         },
+        -- formatting = {
+        --   format = require('lspkind').cmp_format {
+        --     mode = 'symbol', -- show only symbol annotations
+        --     maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+        --     -- can also be a function to dynamically calculate max width such as
+        --     -- maxwidth = function() return math.floor(0.45 * vim.o.columns) end,
+        --     ellipsis_char = '...', -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
+        --     show_labelDetails = true, -- show labelDetails in menu. Disabled by default
+        --
+        --     -- The function below will be called before any actual modifications from lspkind
+        --     -- so that you can provide more controls on popup customization. (See [#30](https://github.com/onsails/lspkind-nvim/pull/30))
+        --     -- before = function (entry, vim_item)
+        --     --   ...
+        --     --   return vim_item
+        --     -- end
+        --   },
+        -- },
       }
     end,
   },
@@ -926,7 +988,7 @@ require('lazy').setup({
       --  - va)  - [V]isually select [A]round [)]paren
       --  - yinq - [Y]ank [I]nside [N]ext [']quote
       --  - ci'  - [C]hange [I]nside [']quote
-      require('mini.ai').setup { n_lines = 500 }
+      -- require('mini.ai').setup { n_lines = 500 }
 
       -- Add/delete/replace surroundings (brackets, quotes, etc.)
       --
@@ -960,21 +1022,21 @@ require('lazy').setup({
     build = ':TSUpdate',
     config = function()
       -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
-
+      require('nvim-treesitter.install').prefer_git = true
       ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup {
         ensure_installed = { 'cpp', 'python', 'bash', 'c', 'html', 'lua', 'markdown', 'vim', 'vimdoc' },
         -- Autoinstall languages that are not installed
         auto_install = true,
         highlight = { enable = true },
-        indent = { enable = true },
+        indent = { enable = false },
         incremental_selection = {
           enable = true,
           keymaps = {
-            init_selection = 'gnn',
-            node_incremental = 'grn',
-            scope_incremental = 'grc',
-            node_decremental = 'grm',
+            init_selection = '<C-space>',
+            node_incremental = '<C-Space>',
+            scope_incremental = false,
+            node_decremental = '<bs>',
           },
         },
       }
