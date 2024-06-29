@@ -20,6 +20,7 @@ What is Kickstart?
     reference for how Neovim integrates Lua.
     - :help lua-guide
     - (or HTML version): https://neovim.io/doc/user/lua-guide.html
+    sorting_strategy = "ascending",
 
 Kickstart Guide:
 
@@ -147,6 +148,18 @@ vim.opt.scrolloff = 10
 vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
+-- The line beneath this is called `modeline`. See `:help modeline`
+-- vim: ts=2 sts=2 sw=2 et
+-- vim.api.nvim_set_hl(0, 'TelescopeNormal', { bg = 'none' })
+vim.api.nvim_set_hl(0, 'FloatBorder', { bg = 'None' })
+-- vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'None' })
+vim.api.nvim_set_hl(0, 'TelescopeNormal', { bg = 'None' })
+vim.api.nvim_set_hl(0, 'TelescopeBorder', { bg = 'None' })
+vim.api.nvim_set_hl(0, 'TelescopePromptBorder', { bg = 'None' })
+vim.api.nvim_set_hl(0, 'SignColumn', { bg = 'None' })
+vim.api.nvim_set_hl(0, 'LineNrAbove', { fg = '#F6F6F6' })
+vim.api.nvim_set_hl(0, 'LineNrBelow', { fg = '#F6F6F6' })
+vim.keymap.set('n', '<F8>', ':w<CR>:!g++ % -o %:r;./%:r<CR>')
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
@@ -398,11 +411,26 @@ require('lazy').setup({
 
       vim.keymap.set('n', '<leader>sf', function()
         -- You can pass additional configuration to telescope to change theme, layout, etc.
-        builtin.find_files(require('telescope.themes').get_dropdown {
-          winblend = 0,
-          previewer = false,
-        })
+        builtin.fd {
+          layout_config = { prompt_position = 'top', height = 20 },
+
+          sorting_strategy = 'ascending',
+        }
+        -- require 'telescope.themes'
+        -- .get_dropdown {
+        --          winblend = 0,
+        --          previewer = true,
+        --        }
+        -- )
       end, { desc = '[S]earch [F]iles' })
+
+      vim.keymap.set('n', '<C-t>', function()
+        builtin.fd {
+          layout_config = { prompt_position = 'top', height = 20 },
+          sorting_strategy = 'ascending',
+        }
+      end, { desc = '[S]earch [F]iles' })
+
       -- vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
       -- vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sw', function()
@@ -990,13 +1018,13 @@ require('lazy').setup({
     config = function()
       -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
       require('nvim-treesitter.install').prefer_git = true
-      ---@diagnostic disable-next-line: missing-fields
-      require('nvim-treesitter.configs').setup {
+      -- require 'nvim-treesitter.install'
+      local opts = {
         ensure_installed = { 'cpp', 'python', 'bash', 'c', 'html', 'lua', 'markdown', 'vim', 'vimdoc' },
         -- Autoinstall languages that are not installed
         auto_install = true,
         highlight = { enable = true },
-        indent = { enable = false },
+        indent = { enable = true },
         incremental_selection = {
           enable = true,
           keymaps = {
@@ -1007,7 +1035,8 @@ require('lazy').setup({
           },
         },
       }
-
+      ---@diagnostic disable-next-line: missing-fields
+      require('nvim-treesitter.configs').setup(opts)
       -- There are additional nvim-treesitter modules that you can use to interact
       -- with nvim-treesitter. You should go explore a few and see what interests you:
       --
@@ -1065,12 +1094,3 @@ require('cmp').setup.filetype({ 'sql' }, {
     { name = 'buffer' },
   },
 })
--- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 et
--- vim.api.nvim_set_hl(0, 'TelescopeNormal', { bg = 'none' })
-vim.api.nvim_set_hl(0, 'FloatBorder', { bg = 'None' })
-vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'None' })
-vim.api.nvim_set_hl(0, 'TelescopeNormal', { bg = 'None' })
-vim.api.nvim_set_hl(0, 'TelescopeBorder', { bg = 'None' })
-vim.api.nvim_set_hl(0, 'TelescopePromptBorder', { bg = 'None' })
-vim.api.nvim_set_hl(0, 'SignColumn', { bg = 'None' })

@@ -18,7 +18,7 @@ return {
     },
   },
   dependencies = {
-    { 'nvim-lua/plenary.nvim', 'luarocks.nvim', '3rd/image.nvim' },
+    { 'nvim-lua/plenary.nvim', 'luarocks.nvim' },
     {
       'folke/tokyonight.nvim',
     },

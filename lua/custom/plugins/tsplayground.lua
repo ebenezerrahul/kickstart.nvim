@@ -3,7 +3,6 @@ return {
   'nvim-treesitter/playground',
   dependencies = { 'nvim-treesitter/nvim-treesitter' },
 
-  'nvim-treesitter.configs',
   config = function()
     require('nvim-treesitter.configs').setup {
       playground = {
