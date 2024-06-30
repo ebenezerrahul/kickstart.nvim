@@ -69,8 +69,8 @@ P.S. You can delete this when you're done too. It's your config now! :)
 -- Set <space> as the leader key
 -- See `:help mapleader`
 local set = vim.keymap.set
-set('n', '<M-.>', '<c-w>5<')
-set('n', '<M-,>', '<c-w>5>')
+set('n', '<M-Left>', '<c-w>5<')
+set('n', '<M-Right>', '<c-w>5>')
 set('n', '<M-t>', '<C-W>+')
 set('n', '<M-s>', '<C-W>-')
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -84,7 +84,6 @@ vim.g.have_nerd_font = true
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
-
 -- Make line numbers default
 vim.opt.number = true
 -- You can also add relative line numbers, for help with jumping.
@@ -571,7 +570,7 @@ require('lazy').setup({
           map('gd', function()
             require('telescope.builtin').lsp_definitions(require('telescope.themes').get_ivy {})
           end, '[G]oto [D]efinition')
-          map('<C-k>', vim.lsp.buf.signature_help, 'signature')
+          map('<C-g>', vim.lsp.buf.signature_help, 'signature')
 
           -- Find references for the word under your cursor.
           map('gr', function()
@@ -630,6 +629,12 @@ require('lazy').setup({
           --
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
+
+          if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
+            map('<leader>th', function()
+              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+            end, '[T]oggle Inlay [H]ints')
+          end
           if client and client.server_capabilities.documentHighlightProvider then
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
               buffer = event.buf,
@@ -892,8 +897,8 @@ require('lazy').setup({
           ['<C-p>'] = cmp.mapping.select_prev_item(),
 
           -- Scroll the documentation window [b]ack / [f]orward
-          -- ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-          -- ['<C-f>'] = cmp.mapping.scroll_docs(4),
+          ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+          ['<C-f>'] = cmp.mapping.scroll_docs(4),
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
@@ -928,6 +933,7 @@ require('lazy').setup({
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
+          { name = 'orgmode' },
         },
         -- formatting = {
         --   format = require('lspkind').cmp_format {
@@ -995,17 +1001,17 @@ require('lazy').setup({
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
       --  and try some other statusline plugin
-      local statusline = require 'mini.statusline'
-      -- set use_icons to true if you have a Nerd Font
-      statusline.setup { use_icons = vim.g.have_nerd_font }
-
-      -- You can configure sections in the statusline by overriding their
-      -- default behavior. For example, here we set the section for
-      -- cursor location to LINE:COLUMN
-      ---@diagnostic disable-next-line: duplicate-set-field
-      statusline.section_location = function()
-        return '%2l:%-2v'
-      end
+      -- local statusline = require 'mini.statusline'
+      -- -- set use_icons to true if you have a Nerd Font
+      -- statusline.setup { use_icons = vim.g.have_nerd_font }
+      --
+      -- -- You can configure sections in the statusline by overriding their
+      -- -- default behavior. For example, here we set the section for
+      -- -- cursor location to LINE:COLUMN
+      -- ---@diagnostic disable-next-line: duplicate-set-field
+      -- statusline.section_location = function()
+      --   return '%2l:%-2v'
+      -- end
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
@@ -1021,6 +1027,7 @@ require('lazy').setup({
       -- require 'nvim-treesitter.install'
       local opts = {
         ensure_installed = { 'cpp', 'python', 'bash', 'c', 'html', 'lua', 'markdown', 'vim', 'vimdoc' },
+        ignore_install = { 'org' },
         -- Autoinstall languages that are not installed
         auto_install = true,
         highlight = { enable = true },
@@ -1094,3 +1101,8 @@ require('cmp').setup.filetype({ 'sql' }, {
     { name = 'buffer' },
   },
 })
+
+-- vim.cmd [[
+-- set laststatus=3
+-- ]]
+vim.go.laststatus = 3

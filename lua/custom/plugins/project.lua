@@ -4,6 +4,7 @@ return {
     projects = { -- define project roots
       '~/projects/*',
       '~/.config/*',
+      '~/projects/cp-practise/*',
     },
     last_session_on_startup = false,
     -- for not strating on last file
