@@ -276,9 +276,9 @@ require('lazy').setup({
           virt_text_priority = 100,
         },
         current_line_blame_formatter = '<author>, <author_time:%Y-%m-%d> - <summary>',
-        current_line_blame_formatter_opts = {
-          relative_time = false,
-        },
+        -- current_line_blame_formatter_opts = {
+        --   relative_time = false,
+        -- },
         update_debounce = 100,
         status_formatter = nil,
         preview_config = {
@@ -876,13 +876,27 @@ require('lazy').setup({
       -- See `:help cmp`
       local cmp = require 'cmp'
       local luasnip = require 'luasnip'
-      luasnip.config.setup {}
-
+      luasnip.config.set_config {
+        history = true,
+        update_events = 'TextChanged, TextChangedI',
+        enable_autosnippets = true, -- not sure yet
+        ext_opts = {
+          [require('luasnip.util.types').choiceNode] = {
+            active = {
+              virt_text = { { '<-- Choice Node' } },
+            },
+          },
+        },
+      }
+      require('luasnip.loaders.from_vscode').lazy_load()
       cmp.setup {
         snippet = {
           expand = function(args)
             luasnip.lsp_expand(args.body)
           end,
+        },
+        formatting = {
+          format = require('nvim-highlight-colors').format,
         },
         completion = { completeopt = 'menu,menuone,noinsert' },
 
@@ -1094,6 +1108,7 @@ require('lazy').setup({
 })
 
 require 'snippets.cpp'
+require 'snippets.cf-cpp'
 
 require('cmp').setup.filetype({ 'sql' }, {
   sources = {
@@ -1106,3 +1121,8 @@ require('cmp').setup.filetype({ 'sql' }, {
 -- set laststatus=3
 -- ]]
 vim.go.laststatus = 3
+-- vim.go.winbar = '%=%f %m'
+--
+
+vim.api.nvim_set_hl(0, 'LineNrAbove', { fg = '#F6F6F6' })
+vim.api.nvim_set_hl(0, 'LineNrBelow', { fg = '#F6F6F6' })

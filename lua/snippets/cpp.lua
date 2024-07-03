@@ -8,45 +8,6 @@ local rep = require('luasnip.extras').rep
 -- NOTE: Start Templates
 
 ls.add_snippets(language, {
-  s(
-    'beg',
-    fmt(
-
-      [[
-      #include <bits/stdc++.h>
-      
-      using PII = std::pair<int, int>;
-      using ll = int64_t;
-      using vi = std::vector<int>;
-      using vc = std::vector<char>;
-      using vl = std::vector<ll>;
-      using vpii = std::vector<PII>;
-      using vvi = std::vector<vi>;
-      using vvc = std::vector<vc>;
-      
-      void
-      solve()
-      {{
-          using namespace std;
-      {}
-      }}
-      
-      int32_t
-      main()
-      {{
-        int32_t t;
-        std::cin >> t;
-        for (int i{{ t }}; t > 0; t--) {{
-          solve();
-        }}
-        return 0;
-      }}
-      ]],
-      {
-        i(1),
-      }
-    )
-  ),
   s('hello', fmt([[std::cout << 'Hello' << endl;]], {})),
   s(
     'leet',
@@ -64,6 +25,7 @@ ls.add_snippets(language, {
 --- Note: this is not included anywhere, it's just to help lua_ls.
 
 --- @diagnostic disable: lowercase-global
+
 s = require('luasnip.nodes.snippet').S
 sn = require('luasnip.nodes.snippet').SN
 isn = require('luasnip.nodes.snippet').ISN
@@ -89,6 +51,10 @@ postfix = require('luasnip.extras.postfix').postfix
 types = require 'luasnip.util.types'
 parse = require('luasnip.util.parser').parse_snippet
 ms = require('luasnip.nodes.multiSnippet').new_multisnippet
+
+-- ls.add_snippets(language, {
+--   ls.parse_snippet('fori', 'for(int {$1:i}; )'),
+-- })
 
 local ts_utils = require 'nvim-treesitter.ts_utils'
 

@@ -5,6 +5,7 @@ return {
       '~/projects/*',
       '~/.config/*',
       '~/projects/cp-practise/*',
+      '~/contests',
     },
     last_session_on_startup = false,
     -- for not strating on last file
