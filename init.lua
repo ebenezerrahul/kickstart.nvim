@@ -375,11 +375,12 @@ require('lazy').setup({
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
+        defaults = {
+          mappings = {
+            i = { ['<C-enter>'] = 'to_fuzzy_refine', ['<C-u>'] = false },
+            n = { ['<M-p>'] = require('telescope.actions.layout').toggle_preview },
+          },
+        },
         -- pickers = {}
         extensions = {
           ['ui-select'] = {
@@ -394,6 +395,22 @@ require('lazy').setup({
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
+      local bottom_min = require('telescope.themes').get_ivy {
+        winblend = 0,
+        previewer = true,
+        border = false,
+        borderchars = {
+          prompt = { '─', '│', 'x', '│', '╭', '┬', '│', '│' },
+          results = { '─', '│', '─', '│', '├', '┤', '┴', '╰' },
+          preview = { '─', '│', '─', ' ', '─', '╮', '╯', '─' },
+        },
+        layout_config = {
+          height = 15,
+        },
+      }
+      vim.keymap.set('n', 'z=', function()
+        builtin.spell_suggest(require('telescope.themes').get_cursor { border = false })
+      end)
       vim.keymap.set('n', '<leader>sh', function()
         builtin.help_tags(require('telescope.themes').get_dropdown {
           winblend = 0,
@@ -410,11 +427,12 @@ require('lazy').setup({
 
       vim.keymap.set('n', '<leader>sf', function()
         -- You can pass additional configuration to telescope to change theme, layout, etc.
-        builtin.fd {
-          layout_config = { prompt_position = 'top', height = 20 },
-
-          sorting_strategy = 'ascending',
-        }
+        -- builtin.fd {
+        --   layout_config = { prompt_position = 'top', height = 20 },
+        --
+        --   sorting_strategy = 'ascending',
+        -- }
+        builtin.find_files(bottom_min)
         -- require 'telescope.themes'
         -- .get_dropdown {
         --          winblend = 0,
@@ -424,10 +442,11 @@ require('lazy').setup({
       end, { desc = '[S]earch [F]iles' })
 
       vim.keymap.set('n', '<C-t>', function()
-        builtin.fd {
-          layout_config = { prompt_position = 'top', height = 20 },
-          sorting_strategy = 'ascending',
-        }
+        builtin.find_files(bottom_min)
+        -- builtin.find_files {
+        --   layout_config = { prompt_position = 'top', height = 20 },
+        --   sorting_strategy = 'ascending',
+        -- }
       end, { desc = '[S]earch [F]iles' })
 
       -- vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
@@ -440,24 +459,25 @@ require('lazy').setup({
       end, { desc = '[S]earch current [W]ord' })
 
       vim.keymap.set('n', '<leader>sg', function()
-        builtin.live_grep(require('telescope.themes').get_ivy {
+        -- builtin.spell_suggest
+        term = vim.fn.input 'Grep >'
+        builtin.grep_string(require('telescope.themes').get_ivy {
           winblend = 0,
           previewer = true,
+          border = false,
+          search = term,
+          layout_config = {
+            height = 15,
+          },
         })
       end, { desc = '[S]earch by [G]rep' })
 
       vim.keymap.set('n', '<leader>sd', function()
-        builtin.diagnostics(require('telescope.themes').get_ivy {
-          winblend = 0,
-          previewer = true,
-        })
+        builtin.diagnostics(bottom_min)
       end, { desc = '[S]earch [D]iagnostics' })
 
       vim.keymap.set('n', '<leader>sr', function()
-        builtin.oldfiles(require('telescope.themes').get_dropdown {
-          winblend = 0,
-          previewer = false,
-        })
+        builtin.oldfiles(bottom_min)
       end, { desc = '[S]earch Recent Files ("." for repeat)' })
 
       -- vim.keymap.set('n', '<leader>sb', function()
@@ -741,7 +761,8 @@ require('lazy').setup({
         tsserver = {},
 
         ltex = {
-          filetypes = { 'text', 'markdown', 'md', 'norg' },
+          -- filetypes = { 'text', 'markdown', 'md', 'norg' },
+          filetypes = { 'text' },
           settings = {
             ltex = {
               completionEnabled = true,

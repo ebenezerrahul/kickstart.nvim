@@ -139,10 +139,126 @@ local dbg_impl = s(
     {}
   )
 )
+
+local bin_exp = s(
+  'bin_exp',
+  fmt(
+    [[
+    template<typename T>
+    T
+    bin_exp(T& base, int exp, T& identity)
+    {{
+        T current = identity;
+        while (exp) {{
+            if (exp & 1) {{
+                current = current * base;
+            }}
+            base = base * base;
+            exp >>= 1;
+        }}
+        return std::move(current);
+    }};
+    ]],
+    {}
+  )
+)
+
 local make_snippet = ls.parser.parse_snippet
+
+local matrix = make_snippet(
+  'matrix',
+  [[
+const int mod = 1e9 + 7;
+class matrix
+{
+  private:
+    int n;
+    int m;
+
+  public:
+    vvi array;
+    matrix(vvi&& array)
+    {
+	this->m = array.size();
+	if (array.size() <= 0) {
+	    this->n = 0;
+	} else {
+	    this->n = array[0].size();
+	}
+	this->array = array;
+    }
+    matrix(int m, int n){};
+    static matrix null(int m, int n)
+    {
+	vvi array(m, vi(n, 0));
+	return matrix(std::move(array));
+    }
+    int get_m() { return this->m; }
+    int get_n() { return this->n; }
+    static matrix identity(int n)
+    {
+	matrix mat = matrix::null(n, n);
+	for (int i = 0; i < mat.get_n(); i++) {
+	    mat.array[i][i] = 1;
+	}
+	return mat;
+    }
+
+    friend ostream& operator<<(ostream& os, const matrix& mat);
+
+    matrix operator*(matrix other)
+    {
+	if (this->n != other.m) {
+	    dbg("mat multiplication not possible");
+	    exit(1);
+	}
+	int m = this->m;
+	int n = this->n;
+	int r = other.n;
+	matrix result = matrix::null(m, r);
+
+	for (int j = 0; j < n; j++) {
+	    for (int i = 0; i < m; i++) {
+		for (int k = 0; k < r; k++) {
+		    result.array[i][k] +=
+		      (this->array[i][j] * other.array[j][k]);
+		    if (result.array[i][k] >= 0)
+			result.array[i][k] %= mod;
+		    else {
+			int temp = result.array[i][k];
+			temp *= -1;
+			temp %= mod;
+			result.array[i][k] = mod - temp;
+		    }
+		}
+	    }
+	}
+	return result;
+    };
+};
+
+ostream&
+operator<<(ostream& os, const matrix& mat)
+{
+
+    int n = mat.n;
+    int m = mat.m;
+    cout << "\n";
+    for (int i = 0; i < m; i++) {
+	for (int j = 0; j < n; j++) {
+	    os << mat.array[i][j] << " ";
+	}
+	os << "\n";
+    }
+    return os;
+}
+
+$0
+]]
+)
 local sort = make_snippet('sort', 'sort(${1:arr}.begin(), $1.end());\n$0')
 local all = make_snippet('all', '${1:arr}.begin(), $1.end()')
-local mysnippets = { fori, beg, sort, all, dbg_impl }
+local mysnippets = { fori, beg, sort, all, dbg_impl, bin_exp, matrix }
 ls.add_snippets(language, mysnippets)
 
 vim.keymap.set('n', '<leader><leader>s', '<cmd> source ~/.config/nvim/lua/snippets/cf-cpp.lua<CR>')

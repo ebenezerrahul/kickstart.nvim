@@ -4,7 +4,10 @@ return {
   config = function()
     require('paperplanes').setup {
       register = '+',
-      provider = '0x0.st',
+      provider = 'gist',
+      provider_options = {
+        command = 'gh',
+      },
       notifier = vim.notify or print,
     }
   end,

@@ -5,11 +5,11 @@ return {
       '~/projects/*',
       '~/.config/*',
       '~/projects/cp-practise/*',
-      '~/contests',
+      '~/contests/*',
     },
     last_session_on_startup = false,
     -- for not strating on last file
-    -- dashboard_mode = true,
+    dashboard_mode = false,
   },
   init = function()
     -- enable saving the state of plugins in the session
