@@ -42,7 +42,7 @@ Kickstart Guide:
 
     This should be the first place you go to look when you're stuck or confused
     with something. It's one of my favorite neovim features.
-
+  
     MOST IMPORTANTLY, we provide a keymap "<space>sh" to [s]earch the [h]elp documentation,
     which is very useful when you're not sure exactly what you're looking for.
 

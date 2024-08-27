@@ -9,7 +9,7 @@ return {
     },
     last_session_on_startup = false,
     -- for not strating on last file
-    dashboard_mode = false,
+    dashboard_mode = true,
   },
   init = function()
     -- enable saving the state of plugins in the session
