@@ -3,13 +3,15 @@ return {
   opts = {
     projects = { -- define project roots
       '~/projects/*',
+      '~/projects/explore/*',
+      '~/projects/explore/3b1b/*',
       '~/.config/*',
       '~/projects/cp-practise/*',
       '~/contests/*',
     },
     last_session_on_startup = false,
     -- for not strating on last file
-    dashboard_mode = false,
+    dashboard_mode = true,
   },
   init = function()
     -- enable saving the state of plugins in the session

@@ -1128,8 +1128,10 @@ require('lazy').setup({
   },
 })
 
-require 'snippets.cpp'
-require 'snippets.cf-cpp'
+vim.schedule(function()
+  require 'snippets.cpp'
+  require 'snippets.cf-cpp'
+end)
 
 require('cmp').setup.filetype({ 'sql' }, {
   sources = {
