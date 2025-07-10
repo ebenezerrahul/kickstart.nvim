@@ -3,6 +3,7 @@ return {
   opts = {
     projects = { -- define project roots
       '~/projects/*',
+      '~/projects/codecrafters/*',
       '~/projects/explore/*',
       '~/projects/explore/3b1b/*',
       '~/.config/*',

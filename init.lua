@@ -500,10 +500,21 @@ require('lazy').setup({
       -- Also possible to pass additional configuration options.
       --  See `:help telescope.builtin.live_grep()` for information about particular keys
       vim.keymap.set('n', '<leader>s/', function()
-        builtin.live_grep {
+        builtin.live_grep(require('telescope.themes').get_ivy {
+          winblend = 0,
+          previewer = true,
+          border = false,
+          borderchars = {
+            prompt = { '─', '│', 'x', '│', '╭', '┬', '│', '│' },
+            results = { '─', '│', '─', '│', '├', '┤', '┴', '╰' },
+            preview = { '─', '│', '─', ' ', '─', '╮', '╯', '─' },
+          },
+          layout_config = {
+            height = 15,
+          },
           grep_open_files = true,
           prompt_title = 'Live Grep in Open Files',
-        }
+        })
       end, { desc = '[S]earch [/] in Open Files' })
 
       -- Shortcut for searching your neovim configuration files
@@ -512,17 +523,11 @@ require('lazy').setup({
       end, { desc = '[S]earch [N]eovim files' })
 
       vim.keymap.set('n', '<leader>sm', function()
-        builtin.marks(require('telescope.themes').get_dropdown {
-          prompt_title = 'marks',
-          previewer = false,
-        })
+        builtin.marks(bottom_min)
       end, { desc = '[S]earch [M]arks' })
 
       vim.keymap.set('n', '<leader>pr', function()
-        builtin.registers(require('telescope.themes').get_dropdown {
-          prompt_title = 'registers',
-          previewer = false,
-        })
+        builtin.registers(bottom_min)
       end, { desc = '[P]aste [R]egisters' })
 
       vim.keymap.set('n', '<leader>q', ':Telescope diagnostics<CR>', { desc = 'search diagnostic' })
@@ -687,9 +692,10 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         clangd = {},
-        -- gopls = {},
+        gopls = {},
         pyright = {},
         emmet_ls = {},
+        jdtls = {},
         rust_analyzer = {
 
           settings = {
@@ -758,7 +764,7 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        tsserver = {},
+        -- tsserver = {},
 
         ltex = {
           -- filetypes = { 'text', 'markdown', 'md', 'norg' },

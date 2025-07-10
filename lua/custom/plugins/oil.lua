@@ -7,6 +7,10 @@ return {
       default_file_explorer = true,
       delete_to_trash = false,
       skip_confirm_for_simple_edits = false,
+      keymaps = {
+        ['<C-t>'] = false,
+        -- ['<C-t>'] = { 'actions.select', opts = { tab = true }, desc = 'Open the entry in new tab' },
+      },
       view_options = {
         show_hidden = true,
       },
